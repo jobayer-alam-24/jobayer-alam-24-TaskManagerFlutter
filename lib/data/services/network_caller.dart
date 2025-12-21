@@ -1,8 +1,12 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
+import 'package:task_manager/app.dart';
 import 'package:task_manager/data/models/network_response.dart';
+import 'package:task_manager/ui/controllers/auth_controller.dart';
+import 'package:task_manager/ui/screens/sign_in_screen.dart';
 
 import '../models/network_response.dart';
 
@@ -12,10 +16,13 @@ class NetworkCaller {
     try
     {
       Uri uri = Uri.parse(url);
+      Map<String, String> headers = {
+        'token' : AuthController.accessToken.toString(),
+      };
       debugPrint(url);
-      final response = await get(uri);
+      final response = await get(uri, headers: headers);
       printResponse(url, response);
-      if(response.statusCode == 200)
+      if(response.statusCode == 200 || response.statusCode == 201)
       {
         final decodedData = jsonDecode(response.body);
         return NetworkResponse(
@@ -23,7 +30,16 @@ class NetworkCaller {
             statusCode: response.statusCode,
             responseData: decodedData
         );
-      } else {
+      }else if(response.statusCode == 401)
+      {
+        _moveToLogin();
+        return NetworkResponse(
+            isSuccess: false,
+            statusCode: response.statusCode,
+            errorMessege: 'Unauthenticated user.'
+        );
+      }
+      else {
         return NetworkResponse(
             isSuccess: false,
             statusCode: response.statusCode,
@@ -49,7 +65,8 @@ class NetworkCaller {
       debugPrint(url);
       final response = await post(uri,
           headers: {
-            'Content-Type' : 'application/json'
+            'Content-Type' : 'application/json',
+            'token' : AuthController.accessToken.toString()
           },
           body: jsonEncode(body),
       );
@@ -64,7 +81,15 @@ class NetworkCaller {
                 statusCode: response.statusCode,
                 errorMessege: decodedData["data"]
             );
-          }
+          }else if(response.statusCode == 401)
+            {
+              _moveToLogin();
+              return NetworkResponse(
+                  isSuccess: false,
+                  statusCode: response.statusCode,
+                  errorMessege: 'Unauthenticated user.'
+              );
+            }
         return NetworkResponse(
             isSuccess: true,
             statusCode: response.statusCode,
@@ -91,5 +116,9 @@ class NetworkCaller {
   {
     debugPrint("\nURL: $url \n. RESPONSE CODE: ${response.statusCode}\bBODY: ${response.body}");
   }
-
+  static Future<void> _moveToLogin()
+  async {
+    await AuthController.ClearUserData();
+    Navigator.pushAndRemoveUntil(TaskManagerApp.navigatorKey.currentContext!, MaterialPageRoute(builder: (context) => const SignInScreen()), (_) => false);
+  }
 }

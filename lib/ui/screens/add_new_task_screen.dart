@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager/data/models/network_response.dart';
+import 'package:task_manager/data/services/network_caller.dart';
+import 'package:task_manager/ui/widgets/center_circular_progress_indicator.dart';
+import 'package:task_manager/ui/widgets/show_snackbar.dart';
 import 'package:task_manager/ui/widgets/tm_app_bar.dart';
+
+import '../../data/utils/urls.dart';
 
 class AddNewTaskScreen extends StatefulWidget {
   const AddNewTaskScreen({super.key});
@@ -9,39 +15,117 @@ class AddNewTaskScreen extends StatefulWidget {
 }
 
 class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
+  final TextEditingController _titleTEController = TextEditingController();
+  final TextEditingController _descTEController = TextEditingController();
+  final GlobalKey<FormState> _key = GlobalKey<FormState>();
+  bool _inProgress = false;
+  bool _shouldRefershPreviousPage = false;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const TMAppBar(),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 42,),
-              Text("Add New Task", style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.w600
-              ),),
-              const SizedBox(height: 24,),
-              TextFormField(
-                decoration: InputDecoration(
-                    hintText: "Title"
-                ),
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result){
+        if(didPop)
+          {
+            return;
+          }
+        Navigator.pop(context, _shouldRefershPreviousPage);
+      },
+      child: Scaffold(
+        appBar: const TMAppBar(),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Form(
+              key: _key,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 42,),
+                  Text("Add New Task", style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.w600
+                  ),),
+                  const SizedBox(height: 24,),
+                  TextFormField(
+                    controller: _titleTEController,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    decoration: InputDecoration(
+                        hintText: "Title"
+                    ),
+                    validator: (String? value){
+                      if(value!.trim().isEmpty ?? true)
+                        {
+                            return 'Enter a value.';
+                        }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 8,),
+                  TextFormField(
+                    controller: _descTEController,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    decoration: InputDecoration(
+                      hintText: "Description",
+                    ),
+                    validator: (String? value){
+                      if(value!.trim().isEmpty ?? true)
+                      {
+                        return 'Enter a value.';
+                      }
+                      return null;
+                    },
+                    maxLines: 5,
+                  ),
+                  const SizedBox(height: 16,),
+                  Visibility(
+                      visible: !_inProgress,
+                      replacement: CenterCircularProgressIndicator(),
+                      child: ElevatedButton(onPressed: _onTapSubmitButton, child: Icon(Icons.arrow_circle_right_outlined)))
+                ],
               ),
-              const SizedBox(height: 8,),
-              TextFormField(
-                decoration: InputDecoration(
-                  hintText: "Description",
-                ),
-                maxLines: 5,
-              ),
-              const SizedBox(height: 16,),
-              ElevatedButton(onPressed: () {}, child: Icon(Icons.arrow_circle_right_outlined))
-            ],
+            ),
           ),
-        ),
-      )
+        )
+      ),
     );
+  }
+
+  void _onTapSubmitButton()
+  {
+    if(_key.currentState!.validate())
+      {
+        _addNewTask();
+      }
+  }
+  Future<void> _addNewTask() async
+  {
+    _inProgress = true;
+    setState(() {});
+    Map<String, dynamic> reqBody = {
+        "title" : _titleTEController.text.trim(),
+        "description" : _descTEController.text.trim(),
+        "status" : "New"
+    };
+    final NetworkResponse response = await NetworkCaller.postRequest(url: Urls.addNewTask,
+      body: reqBody,
+    );
+    _inProgress = false;
+    setState(() {});
+    if(response.isSuccess)
+      {
+        _shouldRefershPreviousPage = true;
+        _clearTextFields();
+        ShowSnackBarMessege(context, "New Task Added!");
+      }
+    else
+      {
+        ShowSnackBarMessege(context, response.errorMessege, true);
+      }
+  }
+
+  void _clearTextFields()
+  {
+    _titleTEController.clear();
+    _descTEController.clear();
   }
 }

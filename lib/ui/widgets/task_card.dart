@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager/data/models/task_model.dart';
 
 import '../utils/app_colors.dart';
 
 class TaskCard extends StatefulWidget {
   const TaskCard({
-    super.key,
+    super.key, required this.taskModel,
   });
+  final TaskModel taskModel;
 
   @override
   State<TaskCard> createState() => _TaskCardState();
@@ -23,18 +25,18 @@ class _TaskCardState extends State<TaskCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Title Of the Text", style: Theme
+            Text(widget.taskModel.title ?? '', style: Theme
                 .of(context)
                 .textTheme
                 .titleSmall,),
-            Text("Description of the Task"),
-            Text("22/04/2024"),
+            Text(widget.taskModel.description ?? ''),
+            Text(widget.taskModel.createdDate ?? ''),
             const SizedBox(height: 8,),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                _buildTaskStatusChip(),
+                _buildTaskStatusChip(status: widget.taskModel.status,),
                 Wrap(
                   children: [
                     IconButton(
@@ -78,12 +80,12 @@ class _TaskCardState extends State<TaskCard> {
 }
 class _buildTaskStatusChip extends StatelessWidget {
   const _buildTaskStatusChip({
-    super.key,
+    super.key, required this.status,
   });
-
+  final String? status;
   @override
   Widget build(BuildContext context) {
-    return Chip(label: const Text("New", style: TextStyle(
+    return Chip(label: Text(status ?? '', style: const TextStyle(
       fontSize: 12,
       fontWeight: FontWeight.bold
     ),), shape: RoundedRectangleBorder(

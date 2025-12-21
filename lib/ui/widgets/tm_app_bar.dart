@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager/ui/controllers/auth_controller.dart';
 import 'package:task_manager/ui/screens/profile_screen.dart';
 import 'package:task_manager/ui/screens/sign_in_screen.dart';
 
@@ -45,7 +46,8 @@ class TMAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ],
               ),
             ),
-            IconButton(onPressed: (){
+            IconButton(onPressed: () async {
+              await AuthController.ClearUserData();
               Navigator.pushAndRemoveUntil(context,
                   MaterialPageRoute(builder: (context) => const SignInScreen())
                   , (_) => false);
