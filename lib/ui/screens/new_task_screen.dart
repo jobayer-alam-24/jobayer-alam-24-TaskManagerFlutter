@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:task_manager/ui/screens/add_new_task_screen.dart';
 import 'package:task_manager/ui/utils/app_colors.dart';
 
+import '../widgets/task_card.dart';
 import '../widgets/task_summary_card.dart';
 
 class NewTaskScreen extends StatefulWidget {
@@ -17,33 +18,17 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
     return Scaffold(
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  TaskSummaryCard(
-                    count: 09,
-                    title: "New",
-                  ),
-                  TaskSummaryCard(
-                    count: 09,
-                    title: "Completed",
-                  ),
-                  TaskSummaryCard(
-                    count: 09,
-                    title: "Cancelled",
-                  ),
-                  TaskSummaryCard(
-                    count: 09,
-                    title: "Progress",
-                  ),
-                ],
-              ),
-            )
-          ),
-          // Expanded(child: child)
+          _taskSummarySection(),
+          Expanded(child: ListView.separated(
+              itemCount: 10,
+              itemBuilder: (context, index) {
+                return const TaskCard();
+              },
+            separatorBuilder: (context, index)
+            {
+              return const SizedBox(height: 8,);
+            },
+          )),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -59,7 +44,36 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
   {
     Navigator.push(context, MaterialPageRoute(builder: (context) => const AddNewTaskScreen()));
   }
-
-
+ Widget _taskSummarySection()
+  {
+    return const Padding(
+        padding: EdgeInsets.all(8.0),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              TaskSummaryCard(
+                count: 09,
+                title: "New",
+              ),
+              TaskSummaryCard(
+                count: 09,
+                title: "Completed",
+              ),
+              TaskSummaryCard(
+                count: 09,
+                title: "Cancelled",
+              ),
+              TaskSummaryCard(
+                count: 09,
+                title: "Progress",
+              ),
+            ],
+          ),
+        )
+    );
+  }
 }
+
+
 

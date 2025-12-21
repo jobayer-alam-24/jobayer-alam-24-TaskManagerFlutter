@@ -51,7 +51,7 @@ class _MainBottomNavBarScreenState extends State<MainBottomNavBarScreen> {
             label: "Cancelled"
         ),
         const NavigationDestination(
-            icon: Icon(Icons.linear_scale),
+            icon: Icon(Icons.punch_clock_rounded),
             label: "Progress"
         ),
       ]),
