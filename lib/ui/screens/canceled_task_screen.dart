@@ -38,7 +38,7 @@ class _CanceledTaskScreenState extends State<CanceledTaskScreen> {
           padding: const EdgeInsets.only(top: 16),
           itemCount: taskLists.length,
           itemBuilder: (context, index) {
-            return TaskCard(taskModel: taskLists[index],);
+            return TaskCard(taskModel: taskLists[index], onRefreshList: _getCancelledTaskList,);
           },
           separatorBuilder: (context, index)
           {

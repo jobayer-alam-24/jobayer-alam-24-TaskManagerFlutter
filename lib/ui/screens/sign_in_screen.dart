@@ -183,7 +183,16 @@ class _SignInScreenState extends State<SignInScreen> {
     });
     if(response.isSuccess)
       {
-        await AuthController.SaveAccessToken(response.responseData['token']);
+        final data = response.responseData['data'];
+
+        await AuthController.saveUserData(
+          token: response.responseData['token'],
+          email: data['email'],
+          firstName: data['firstName'],
+          lastName: data['lastName'],
+          photoBase64: data['photo'],
+        );
+
 
         Navigator.pushAndRemoveUntil(context,
             MaterialPageRoute(builder: (context) => const MainBottomNavBarScreen())

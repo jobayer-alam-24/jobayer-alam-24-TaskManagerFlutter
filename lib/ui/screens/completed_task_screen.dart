@@ -39,7 +39,7 @@ class _CompletedTaskScreenState extends State<CompletedTaskScreen> {
           padding: const EdgeInsets.only(top: 16),
           itemCount: taskLists.length,
           itemBuilder: (context, index) {
-            return TaskCard(taskModel: taskLists[index],);
+            return TaskCard(taskModel: taskLists[index], onRefreshList: _getCompletedTaskList,);
           },
           separatorBuilder: (context, index)
           {

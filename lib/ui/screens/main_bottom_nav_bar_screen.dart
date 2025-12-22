@@ -5,6 +5,7 @@ import 'package:task_manager/ui/screens/new_task_screen.dart';
 import 'package:task_manager/ui/screens/progress_task_screen.dart';
 import 'package:task_manager/ui/utils/app_colors.dart';
 
+import '../controllers/auth_controller.dart';
 import '../widgets/tm_app_bar.dart';
 
 class MainBottomNavBarScreen extends StatefulWidget {
@@ -15,7 +16,14 @@ class MainBottomNavBarScreen extends StatefulWidget {
 }
 
 class _MainBottomNavBarScreenState extends State<MainBottomNavBarScreen> {
+  String? userName;
+  String? userEmail;
   int _selectedIndex = 0;
+  @override
+  void initState() {
+    _loadUserInfo();
+    super.initState();
+  }
   final List<Widget> _widgets = [
     NewTaskScreen(),
     CompletedTaskScreen(),
@@ -25,7 +33,7 @@ class _MainBottomNavBarScreenState extends State<MainBottomNavBarScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: TMAppBar(),
+      appBar: TMAppBar(userName: userName, userEmail: userEmail),
       body: _widgets[_selectedIndex],
       bottomNavigationBar: NavigationBar(
             indicatorShape: const RoundedRectangleBorder(
@@ -56,6 +64,12 @@ class _MainBottomNavBarScreenState extends State<MainBottomNavBarScreen> {
         ),
       ]),
     );
+  }
+
+  Future<void> _loadUserInfo() async {
+    userName = await AuthController.getFullName();
+    userEmail = await AuthController.getEmail();
+    setState(() {});
   }
 }
 
