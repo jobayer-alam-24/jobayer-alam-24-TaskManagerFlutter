@@ -9,9 +9,14 @@ class TaskSummaryCard extends StatelessWidget {
   final int count;
   @override
   Widget build(BuildContext context) {
+    final color = getTaskSummaryColor(title);
     return Card(
-      color: Colors.white,
-      elevation: 0,
+      color: color.withOpacity(0.1),
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(color: color, width: 1.5),
+      ),
       child: SizedBox(
         width: 120,
         child: Padding(
@@ -20,11 +25,12 @@ class TaskSummaryCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text("$count", style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.w600
+                  fontWeight: FontWeight.w600,
+                color: color
               ),),
               const SizedBox(height: 4,),
               Text(title, style: TextStyle(
-                  color: Colors.green
+                  color: color
               ),)
             ],
           ),
@@ -32,4 +38,20 @@ class TaskSummaryCard extends StatelessWidget {
       ),
     );
   }
+
+  Color getTaskSummaryColor(String title) {
+    switch (title) {
+      case 'New':
+        return Colors.blue;
+      case 'Completed':
+        return Colors.green;
+      case 'Canceled':
+        return Colors.red;
+      case 'Progress':
+        return Colors.deepOrange;
+      default:
+        return Colors.grey;
+    }
+  }
+
 }

@@ -35,7 +35,8 @@ class _MainBottomNavBarScreenState extends State<MainBottomNavBarScreen> {
     return Scaffold(
       appBar: TMAppBar(userName: userName, userEmail: userEmail),
       body: _widgets[_selectedIndex],
-      bottomNavigationBar: NavigationBar(
+      bottomNavigationBar:
+      NavigationBar(
             indicatorShape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.zero,
             ),
@@ -62,10 +63,24 @@ class _MainBottomNavBarScreenState extends State<MainBottomNavBarScreen> {
             icon: Icon(Icons.punch_clock_rounded),
             label: "Progress"
         ),
-      ]),
+      ],
+      ),
     );
   }
-
+  Color getBottomNavColor(int index) {
+    switch (index) {
+      case 0:
+        return Colors.blue; // New
+      case 1:
+        return Colors.orange; // Progress
+      case 2:
+        return Colors.green; // Completed
+      case 3:
+        return Colors.red; // Canceled
+      default:
+        return AppColors.themeColor;
+    }
+    }
   Future<void> loadUserInfo() async {
     userName = await AuthController.getFullName();
     userEmail = await AuthController.getEmail();

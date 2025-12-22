@@ -31,8 +31,12 @@ class _TaskCardState extends State<TaskCard> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Colors.white,
-      elevation: 0,
+      color: getCardColor(widget.taskModel.status),
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(color: getCardBorderColor(widget.taskModel.status), width: 1.5),
+      ),
       margin: const EdgeInsets.symmetric(horizontal: 24),
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -54,9 +58,9 @@ class _TaskCardState extends State<TaskCard> {
                 Wrap(
                   children: [
                     IconButton(
-                        onPressed: _onTapEditButton, icon: Icon(Icons.edit)),
+                        onPressed: _onTapEditButton, icon: Icon(Icons.edit, color: Colors.blue,)),
                     IconButton(onPressed: _onTapDeleteButton,
-                        icon: Icon(Icons.delete)),
+                        icon: Icon(Icons.delete, color: Colors.red,)),
                   ],
                 )
               ],
@@ -126,22 +130,69 @@ class _TaskCardState extends State<TaskCard> {
     }
 
   }
+  Color getCardColor(String? status) {
+    switch (status) {
+      case 'New':
+        return Colors.blue.shade50;
+      case 'Completed':
+        return Colors.green.shade50;
+      case 'Canceled':
+        return Colors.red.shade50;
+      case 'Progress':
+        return Colors.orange.shade50;
+      default:
+        return Colors.white;
+    }
+  }
 
+  Color getCardBorderColor(String? status) {
+    switch (status) {
+      case 'New':
+        return Colors.blue;
+      case 'Completed':
+        return Colors.green;
+      case 'Canceled':
+        return Colors.red;
+      case 'Progress':
+        return Colors.orange;
+      default:
+        return AppColors.themeColor;
+    }
+  }
 }
 class _buildTaskStatusChip extends StatelessWidget {
   const _buildTaskStatusChip({
     super.key, required this.status,
   });
+
   final String? status;
+
   @override
   Widget build(BuildContext context) {
+    final color = getStatusColor(status);
     return Chip(label: Text(status ?? '', style: const TextStyle(
       fontSize: 12,
       fontWeight: FontWeight.bold,
 
     ),), shape: RoundedRectangleBorder(
-      borderRadius: BorderRadiusGeometry.circular(16),
-      side: BorderSide(color: AppColors.themeColor)
+        borderRadius: BorderRadiusGeometry.circular(16),
+        side: BorderSide(color: color)
     ),);
   }
+
+  Color getStatusColor(String? status) {
+    switch (status) {
+      case 'New':
+        return Colors.blue;
+      case 'Completed':
+        return Colors.green;
+      case 'Canceled':
+        return Colors.red;
+      case 'Progress':
+        return Colors.orange;
+      default:
+        return AppColors.themeColor;
+    }
+  }
+
 }
