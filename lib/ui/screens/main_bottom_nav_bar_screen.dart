@@ -21,7 +21,7 @@ class _MainBottomNavBarScreenState extends State<MainBottomNavBarScreen> {
   int _selectedIndex = 0;
   @override
   void initState() {
-    _loadUserInfo();
+    loadUserInfo();
     super.initState();
   }
   final List<Widget> _widgets = [
@@ -66,7 +66,7 @@ class _MainBottomNavBarScreenState extends State<MainBottomNavBarScreen> {
     );
   }
 
-  Future<void> _loadUserInfo() async {
+  Future<void> loadUserInfo() async {
     userName = await AuthController.getFullName();
     userEmail = await AuthController.getEmail();
     setState(() {});

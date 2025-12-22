@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager/data/models/network_response.dart';
 import 'package:task_manager/data/services/network_caller.dart';
+import 'package:task_manager/ui/controllers/auth_controller.dart';
 import 'package:task_manager/ui/widgets/center_circular_progress_indicator.dart';
 import 'package:task_manager/ui/widgets/show_snackbar.dart';
 import 'package:task_manager/ui/widgets/tm_app_bar.dart';
@@ -15,11 +16,20 @@ class AddNewTaskScreen extends StatefulWidget {
 }
 
 class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
+  String? _userName = '';
+  String? _userEmail = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserInfo();
+  }
   final TextEditingController _titleTEController = TextEditingController();
   final TextEditingController _descTEController = TextEditingController();
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
   bool _inProgress = false;
   bool _shouldRefershPreviousPage = false;
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -32,7 +42,7 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
         Navigator.pop(context, _shouldRefershPreviousPage);
       },
       child: Scaffold(
-        appBar: const TMAppBar(),
+        appBar: TMAppBar(userName: _userName, userEmail: _userEmail,),
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(24),
@@ -97,6 +107,12 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
         _addNewTask();
       }
   }
+  Future<void> _loadUserInfo() async {
+    _userName = await AuthController.getFullName();
+    _userEmail = await AuthController.getEmail();
+    setState(() {});
+  }
+
   Future<void> _addNewTask() async
   {
     _inProgress = true;

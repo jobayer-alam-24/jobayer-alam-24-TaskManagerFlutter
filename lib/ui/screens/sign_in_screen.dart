@@ -184,15 +184,19 @@ class _SignInScreenState extends State<SignInScreen> {
     if(response.isSuccess)
       {
         final data = response.responseData['data'];
-
+        final String base64Image = data['photo'];
+        final imagePath = await AuthController.saveProfileImage(
+            data['photo'],
+            'profile_image.png'
+        );
         await AuthController.saveUserData(
           token: response.responseData['token'],
           email: data['email'],
           firstName: data['firstName'],
           lastName: data['lastName'],
-          photoBase64: data['photo'],
+          phone: data['mobile'],
+          photo: 'profile_image.png'
         );
-
 
         Navigator.pushAndRemoveUntil(context,
             MaterialPageRoute(builder: (context) => const MainBottomNavBarScreen())

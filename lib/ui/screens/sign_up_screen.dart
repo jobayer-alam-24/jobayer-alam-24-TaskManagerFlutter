@@ -9,6 +9,8 @@ import 'package:task_manager/ui/widgets/center_circular_progress_indicator.dart'
 import 'package:task_manager/ui/widgets/screen_background.dart';
 import 'package:task_manager/ui/widgets/show_snackbar.dart';
 
+import '../controllers/auth_controller.dart';
+
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
 
@@ -25,6 +27,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _mobileNoTEController = TextEditingController();
   final TextEditingController _passwordTEController = TextEditingController();
   bool _inProgress = false;
+
   @override
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme
@@ -227,6 +230,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         _formKey.currentState!.reset();
         _clearTextFields();
         ShowSnackBarMessege(context, "New User Created Successfully!");
+
       } else {
         ShowSnackBarMessege(context, response.errorMessege, true);
       }
