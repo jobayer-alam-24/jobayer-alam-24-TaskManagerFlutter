@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:task_manager/data/models/network_response.dart';
 import 'package:task_manager/data/services/network_caller.dart';
 import 'package:task_manager/data/utils/urls.dart';
@@ -10,6 +11,7 @@ import 'package:task_manager/ui/widgets/screen_background.dart';
 import 'package:task_manager/ui/widgets/show_snackbar.dart';
 
 import '../controllers/auth_controller.dart';
+import 'no_internet_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -206,7 +208,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
       {
         return;
       }
+    _checkConnectivityAndGoNoInternet();
     _singUp();
+  }
+  Future<void> _checkConnectivityAndGoNoInternet() async
+  {
+    bool isConnected = await InternetConnection().hasInternetAccess;
+
+    if (!isConnected) {
+      if (!mounted) return;
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const NoInternetScreen()),
+      );
+      return;
+    }
   }
   Future<void> _singUp() async {
     setState(() => _inProgress = true);
@@ -232,7 +248,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ShowSnackBarMessege(context, "New User Created Successfully!");
 
       } else {
-        ShowSnackBarMessege(context, response.errorMessege, true);
+        ShowSnackBarMessege(context, "Something went wrong!", true);
       }
     } catch (e) {
       ShowSnackBarMessege(context, "Something went wrong!", true);

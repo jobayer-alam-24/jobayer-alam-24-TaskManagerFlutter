@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:task_manager/data/models/network_response.dart';
 import 'package:task_manager/data/services/network_caller.dart';
 import 'package:task_manager/ui/controllers/auth_controller.dart';
@@ -7,6 +8,7 @@ import 'package:task_manager/ui/widgets/show_snackbar.dart';
 import 'package:task_manager/ui/widgets/tm_app_bar.dart';
 
 import '../../data/utils/urls.dart';
+import 'no_internet_screen.dart';
 
 class AddNewTaskScreen extends StatefulWidget {
   const AddNewTaskScreen({super.key});
@@ -32,70 +34,73 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (didPop, result){
-        if(didPop)
-          {
-            return;
-          }
-        Navigator.pop(context, _shouldRefershPreviousPage);
-      },
-      child: Scaffold(
-        appBar: TMAppBar(userName: _userName, userEmail: _userEmail,),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Form(
-              key: _key,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 42,),
-                  Text("Add New Task", style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w600
-                  ),),
-                  const SizedBox(height: 24,),
-                  TextFormField(
-                    controller: _titleTEController,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    decoration: InputDecoration(
-                        hintText: "Title"
+    return RefreshIndicator(
+      onRefresh: () async => await  _checkConnectivityAndGoNoInternet(),
+      child: PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, result){
+          if(didPop)
+            {
+              return;
+            }
+          Navigator.pop(context, _shouldRefershPreviousPage);
+        },
+        child: Scaffold(
+          appBar: TMAppBar(userName: _userName, userEmail: _userEmail,),
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Form(
+                key: _key,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 42,),
+                    Text("Add New Task", style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w600
+                    ),),
+                    const SizedBox(height: 24,),
+                    TextFormField(
+                      controller: _titleTEController,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      decoration: InputDecoration(
+                          hintText: "Title"
+                      ),
+                      validator: (String? value){
+                        if(value!.trim().isEmpty ?? true)
+                          {
+                              return 'Enter a value.';
+                          }
+                        return null;
+                      },
                     ),
-                    validator: (String? value){
-                      if(value!.trim().isEmpty ?? true)
+                    const SizedBox(height: 8,),
+                    TextFormField(
+                      controller: _descTEController,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      decoration: InputDecoration(
+                        hintText: "Description",
+                      ),
+                      validator: (String? value){
+                        if(value!.trim().isEmpty ?? true)
                         {
-                            return 'Enter a value.';
+                          return 'Enter a value.';
                         }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 8,),
-                  TextFormField(
-                    controller: _descTEController,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    decoration: InputDecoration(
-                      hintText: "Description",
+                        return null;
+                      },
+                      maxLines: 5,
                     ),
-                    validator: (String? value){
-                      if(value!.trim().isEmpty ?? true)
-                      {
-                        return 'Enter a value.';
-                      }
-                      return null;
-                    },
-                    maxLines: 5,
-                  ),
-                  const SizedBox(height: 16,),
-                  Visibility(
-                      visible: !_inProgress,
-                      replacement: CenterCircularProgressIndicator(),
-                      child: ElevatedButton(onPressed: _onTapSubmitButton, child: Icon(Icons.arrow_circle_right_outlined)))
-                ],
+                    const SizedBox(height: 16,),
+                    Visibility(
+                        visible: !_inProgress,
+                        replacement: CenterCircularProgressIndicator(),
+                        child: ElevatedButton(onPressed: _onTapSubmitButton, child: Icon(Icons.arrow_circle_right_outlined)))
+                  ],
+                ),
               ),
             ),
-          ),
-        )
+          )
+        ),
       ),
     );
   }
@@ -135,10 +140,22 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
       }
     else
       {
-        ShowSnackBarMessege(context, response.errorMessege, true);
+        ShowSnackBarMessege(context, "Something went wrong!", true);
       }
   }
+  Future<void> _checkConnectivityAndGoNoInternet() async
+  {
+    bool isConnected = await InternetConnection().hasInternetAccess;
 
+    if (!isConnected) {
+      if (!mounted) return;
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const NoInternetScreen()),
+      );
+      return;
+    }
+  }
   void _clearTextFields()
   {
     _titleTEController.clear();

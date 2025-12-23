@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:task_manager/ui/screens/sign_in_screen.dart';
 import 'package:task_manager/ui/widgets/build_photo_picker.dart';
 import 'package:task_manager/ui/widgets/center_circular_progress_indicator.dart';
@@ -9,6 +10,7 @@ import '../../data/services/network_caller.dart';
 import '../../data/utils/urls.dart';
 import '../controllers/auth_controller.dart';
 import '../widgets/show_snackbar.dart';
+import 'no_internet_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -167,7 +169,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
     {
       return;
     }
+    _checkConnectivityAndGoNoInternet();
     _updateProfile();
+  }
+  Future<void> _checkConnectivityAndGoNoInternet() async
+  {
+    bool isConnected = await InternetConnection().hasInternetAccess;
+
+    if (!isConnected) {
+      if (!mounted) return;
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const NoInternetScreen()),
+      );
+      return;
+    }
   }
   Future<void> _updateProfile() async {
     setState(() => _inProgress = true);
@@ -194,7 +210,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ShowSnackBarMessege(context, "Profile Updated Successfully!");
         Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const SignInScreen()), (_) => false);
       } else {
-        ShowSnackBarMessege(context, response.errorMessege, true);
+        ShowSnackBarMessege(context, "Something went wrong!", true);
       }
     } catch (e) {
       ShowSnackBarMessege(context, "Something went wrong!", true);

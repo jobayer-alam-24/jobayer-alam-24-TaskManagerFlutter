@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:task_manager/ui/widgets/center_circular_progress_indicator.dart';
 
 import '../../data/models/network_response.dart';
@@ -8,6 +9,7 @@ import '../../data/services/network_caller.dart';
 import '../../data/utils/urls.dart';
 import '../widgets/show_snackbar.dart';
 import '../widgets/task_card.dart';
+import 'no_internet_screen.dart';
 
 class CompletedTaskScreen extends StatefulWidget {
   const CompletedTaskScreen({super.key});
@@ -33,6 +35,7 @@ class _CompletedTaskScreenState extends State<CompletedTaskScreen> {
       replacement: const CenterCircularProgressIndicator(),
       child: RefreshIndicator(
         onRefresh: () async {
+          await _checkConnectivityAndGoNoInternet();
           _getCompletedTaskList();
         },
         child: ListView.separated(
@@ -61,9 +64,22 @@ class _CompletedTaskScreenState extends State<CompletedTaskScreen> {
       taskLists = taskListModel.data ?? [];
     }
     else {
-      ShowSnackBarMessege(context, response.errorMessege, true);
+      ShowSnackBarMessege(context, "Something went wrong!", true);
     }
     _getCompletedTaskListInProgress = false;
     setState(() {});
+  }
+  Future<void> _checkConnectivityAndGoNoInternet() async
+  {
+    bool isConnected = await InternetConnection().hasInternetAccess;
+
+    if (!isConnected) {
+      if (!mounted) return;
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const NoInternetScreen()),
+      );
+      return;
+    }
   }
 }
