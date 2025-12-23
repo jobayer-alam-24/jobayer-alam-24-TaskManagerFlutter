@@ -34,8 +34,8 @@ class _SignInScreenState extends State<SignInScreen> {
         .textTheme;
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: SingleChildScrollView(
-        child: ScreenBackground(
+      body: ScreenBackground(
+        child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(24),
             child: Column(

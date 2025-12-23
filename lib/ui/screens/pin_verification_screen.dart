@@ -21,8 +21,8 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
         .textTheme;
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: SingleChildScrollView(
-        child: ScreenBackground(
+      body: ScreenBackground(
+        child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(24),
             child: Column(

@@ -1,10 +1,11 @@
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:task_manager/ui/screens/canceled_task_screen.dart';
 import 'package:task_manager/ui/screens/completed_task_screen.dart';
 import 'package:task_manager/ui/screens/new_task_screen.dart';
 import 'package:task_manager/ui/screens/progress_task_screen.dart';
+import 'package:task_manager/ui/screens/add_new_task_screen.dart';
 import 'package:task_manager/ui/utils/app_colors.dart';
-
 import '../controllers/auth_controller.dart';
 import '../widgets/tm_app_bar.dart';
 
@@ -19,72 +20,78 @@ class _MainBottomNavBarScreenState extends State<MainBottomNavBarScreen> {
   String? userName;
   String? userEmail;
   int _selectedIndex = 0;
+
+  final GlobalKey<NewTaskScreenState> _newTaskKey = GlobalKey<NewTaskScreenState>();
+
+  late final List<Widget> _widgets;
+
   @override
   void initState() {
-    loadUserInfo();
     super.initState();
+    loadUserInfo();
+    _widgets = [
+      NewTaskScreen(key: _newTaskKey),
+      const CompletedTaskScreen(),
+      const CanceledTaskScreen(),
+      const ProgressTaskScreen(),
+    ];
   }
-  final List<Widget> _widgets = [
-    NewTaskScreen(),
-    CompletedTaskScreen(),
-    CanceledTaskScreen(),
-    ProgressTaskScreen()
-  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
       appBar: TMAppBar(userName: userName, userEmail: userEmail),
       body: _widgets[_selectedIndex],
-      bottomNavigationBar:
-      NavigationBar(
-            indicatorShape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.zero,
-            ),
-          selectedIndex: _selectedIndex,
-          onDestinationSelected: (int index)
-          {
-            _selectedIndex = index;
-            setState(() {});
+        floatingActionButton: _selectedIndex == 0
+            ? Padding(
+          padding: const EdgeInsets.only(bottom: 16.0, right: 16.0),
+          child: FloatingActionButton(
+            backgroundColor: AppColors.themeColor,
+            foregroundColor: Colors.white,
+            onPressed: () async {
+              final bool? shouldRefresh = await Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const AddNewTaskScreen()),
+              );
+              if (shouldRefresh == true) {
+                _newTaskKey.currentState?.refreshTaskList();
+              }
+            },
+            child: const Icon(Icons.add),
+          ),
+        )
+            : null,
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      bottomNavigationBar: SafeArea(
+        bottom: true,
+        child: CurvedNavigationBar(
+          backgroundColor: Colors.transparent,
+          buttonBackgroundColor: AppColors.themeColor,
+          color: AppColors.themeColor,
+          height: 70,
+          animationCurve: Curves.easeOut,
+          animationDuration: const Duration(milliseconds: 400),
+          index: _selectedIndex,
+          onTap: (index) {
+            setState(() {
+              _selectedIndex = index;
+            });
           },
-          destinations: [
-        const NavigationDestination(
-            icon: Icon(Icons.new_label),
-            label: "New"
+          items: const [
+            Icon(Icons.new_label, color: Colors.white),
+            Icon(Icons.check_box, color: Colors.white),
+            Icon(Icons.close, color: Colors.white),
+            Icon(Icons.punch_clock_rounded, color: Colors.white),
+          ],
         ),
-        const NavigationDestination(
-            icon: Icon(Icons.check_box),
-            label: "Completed"
-        ),
-        const NavigationDestination(
-            icon: Icon(Icons.close),
-            label: "Cancelled"
-        ),
-        const NavigationDestination(
-            icon: Icon(Icons.punch_clock_rounded),
-            label: "Progress"
-        ),
-      ],
       ),
     );
   }
-  Color getBottomNavColor(int index) {
-    switch (index) {
-      case 0:
-        return Colors.blue; // New
-      case 1:
-        return Colors.orange; // Progress
-      case 2:
-        return Colors.green; // Completed
-      case 3:
-        return Colors.red; // Canceled
-      default:
-        return AppColors.themeColor;
-    }
-    }
+
   Future<void> loadUserInfo() async {
     userName = await AuthController.getFullName();
     userEmail = await AuthController.getEmail();
     setState(() {});
   }
 }
-

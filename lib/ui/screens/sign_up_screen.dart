@@ -35,8 +35,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
         .textTheme;
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: SingleChildScrollView(
-        child: ScreenBackground(
+      body: ScreenBackground(
+        child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(24),
             child: Column(

@@ -20,8 +20,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
         .textTheme;
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: SingleChildScrollView(
-        child: ScreenBackground(
+      body: ScreenBackground(
+        child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(24),
             child: Column(
@@ -105,7 +105,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     );
   }
   void _onTapSignIn() {
-    Navigator.pop(context);
+    Navigator.pushAndRemoveUntil(context,
+        MaterialPageRoute(builder: (context) => const SignInScreen()), (_) => false);
   }
   void _onTapNextButton() {
     Navigator.pushAndRemoveUntil(context,
