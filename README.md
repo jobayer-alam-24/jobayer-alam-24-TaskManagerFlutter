@@ -1,6 +1,161 @@
-# task_manager
+📋 Task Manager Flutter App
 
-A new Flutter project.
+A modern Task Manager application built with Flutter that allows users to manage their daily tasks efficiently.
+The app supports task creation, status tracking, and organized task views using a clean UI and structured architecture.
+
+🚀 Features
+
+🔐 User Authentication
+
+Login & registration
+
+Secure token-based authentication
+
+📝 Task Management
+
+Create new tasks
+
+View tasks by status:
+
+New
+
+In Progress
+
+Completed
+
+Canceled
+
+📊 Task Summary
+
+Displays task counts by status
+
+Quick overview dashboard
+
+🌐 API Integration
+
+REST API communication
+
+Centralized network handling
+
+Error & response management
+
+🎨 Clean UI
+
+Material Design
+
+Bottom navigation bar
+
+Floating action button for adding tasks
+
+🛠️ Tech Stack
+
+Flutter (Dart)
+
+REST API
+
+Material UI
+
+MVC-style architecture
+
+Stateful & Stateless Widgets
+
+📂 Project Structure
+lib/
+│
+├── data/
+│   ├── models/        # API response & data models
+│   ├── services/     # Network caller & API services
+│   └── utils/        # URLs, constants
+│
+├── ui/
+│   ├── screens/      # App screens
+│   ├── widgets/      # Reusable UI components
+│   └── utils/        # Colors, styles
+│
+├── controllers/      # Auth & logic controllers
+│
+└── main.dart         # App entry point
+
+📱 Screens Included
+
+Splash Screen
+
+Login Screen
+
+Registration Screen
+
+New Tasks Screen
+
+In-Progress Tasks Screen
+
+Completed Tasks Screen
+
+Canceled Tasks Screen
+
+Profile Update Screen
+
+⚙️ Setup Instructions
+
+Clone the repository
+
+git clone https://github.com/jobayer-alam-24/jobayer-alam-24-TaskManagerFlutter.git
+
+
+Navigate to project folder
+
+cd jobayer-alam-24-TaskManagerFlutter
+
+
+Install dependencies
+
+flutter pub get
+
+
+Run the app
+
+flutter run
+
+📦 Build APK
+flutter build apk --release
+
+
+APK will be generated in:
+
+build/app/outputs/flutter-apk/app-release.apk
+
+🧠 Learning Outcome
+
+This project helped me strengthen my understanding of:
+
+Flutter UI & navigation
+
+API integration
+
+Clean project architecture
+
+State handling
+
+Error handling & validation
+
+🔮 Future Improvements
+
+Offline support
+
+Task search & filters
+
+Push notifications
+
+Dark mode
+
+Better state management (GetX / Provider)
+
+👤 Author
+
+Jobayer Alam
+📍 Bangladesh
+💻 Flutter Developer (Beginner → Intermediate)
+
+🔗 GitHub: jobayer-alam-24
 <img width="4343" height="2274" alt="Artboard – 1" src="https://github.com/user-attachments/assets/de0de293-dc57-465e-ad9e-a9876412da9b" />
 <img width="448" height="924" alt="a" src="https://github.com/user-attachments/assets/c6ca6667-66e2-458b-b78c-737d5783e4e4" />
 <img width="448" height="924" alt="v" src="https://github.com/user-attachments/assets/65b9176b-992f-4b2b-b604-d295e62fa13b" />
