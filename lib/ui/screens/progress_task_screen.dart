@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
 import '../../data/models/network_response.dart';
 import '../../data/models/task_list_model.dart';
@@ -34,8 +33,7 @@ class _ProgressTaskScreenState extends State<ProgressTaskScreen> {
       replacement: const CenterCircularProgressIndicator(),
       child: RefreshIndicator(
         onRefresh: () async {
-          await   _checkConnectivityAndGoNoInternet();
-          _getProgressedTaskList();
+          await _getProgressedTaskList();
         },
         child: ListView.separated(
           padding: const EdgeInsets.only(top: 16),
@@ -69,17 +67,5 @@ class _ProgressTaskScreenState extends State<ProgressTaskScreen> {
     _getProgressedTaskListInProgress = false;
     setState(() {});
   }
-  Future<void> _checkConnectivityAndGoNoInternet() async
-  {
-    bool isConnected = await InternetConnection().hasInternetAccess;
 
-    if (!isConnected) {
-      if (!mounted) return;
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const NoInternetScreen()),
-      );
-      return;
-    }
-  }
 }

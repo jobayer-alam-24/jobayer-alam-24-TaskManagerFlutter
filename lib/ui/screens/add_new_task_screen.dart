@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:task_manager/data/models/network_response.dart';
 import 'package:task_manager/data/services/network_caller.dart';
 import 'package:task_manager/ui/controllers/auth_controller.dart';
@@ -34,9 +33,7 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: () async => await  _checkConnectivityAndGoNoInternet(),
-      child: PopScope(
+    return PopScope(
         canPop: false,
         onPopInvokedWithResult: (didPop, result){
           if(didPop)
@@ -101,8 +98,7 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
             ),
           )
         ),
-      ),
-    );
+      );
   }
 
   void _onTapSubmitButton()
@@ -142,19 +138,6 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
       {
         ShowSnackBarMessege(context, "Something went wrong!", true);
       }
-  }
-  Future<void> _checkConnectivityAndGoNoInternet() async
-  {
-    bool isConnected = await InternetConnection().hasInternetAccess;
-
-    if (!isConnected) {
-      if (!mounted) return;
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const NoInternetScreen()),
-      );
-      return;
-    }
   }
   void _clearTextFields()
   {
