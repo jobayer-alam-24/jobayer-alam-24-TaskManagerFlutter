@@ -12,7 +12,7 @@ import 'no_internet_screen.dart';
 
 class ProgressTaskScreen extends StatefulWidget {
   const ProgressTaskScreen({super.key});
-
+  static const String name = '/ProgressTaskScreen';
   @override
   State<ProgressTaskScreen> createState() => _ProgressTaskScreenState();
 }

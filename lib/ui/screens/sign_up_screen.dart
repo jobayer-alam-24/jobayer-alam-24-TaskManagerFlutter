@@ -1,5 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:task_manager/data/models/network_response.dart';
 import 'package:task_manager/data/services/network_caller.dart';
 import 'package:task_manager/data/utils/urls.dart';
@@ -14,7 +16,7 @@ import 'no_internet_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
-
+  static const String name = '/SignUpScreen';
   @override
   State<SignUpScreen> createState() => _SignUpScreenState();
 }
@@ -200,7 +202,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
   void _onTapSignIn() {
-    Navigator.pop(context);
+    Get.back();
   }
   void _onTapNextButton() {
     if(!_formKey.currentState!.validate())

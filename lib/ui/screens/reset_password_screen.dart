@@ -1,5 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:task_manager/ui/screens/pin_verification_screen.dart';
 import 'package:task_manager/ui/screens/sign_in_screen.dart';
 import 'package:task_manager/ui/utils/app_colors.dart';
@@ -7,7 +9,7 @@ import 'package:task_manager/ui/widgets/screen_background.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
   const ResetPasswordScreen({super.key});
-
+  static const String name = '/ResetPasswordScreen';
   @override
   State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
 }
@@ -105,11 +107,10 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     );
   }
   void _onTapSignIn() {
-    Navigator.pushAndRemoveUntil(context,
-        MaterialPageRoute(builder: (context) => const SignInScreen()), (_) => false);
+    Get.offAllNamed(SignInScreen.name, predicate: (_) => false);
   }
   void _onTapNextButton() {
-    Navigator.pushAndRemoveUntil(context,
-        MaterialPageRoute(builder: (context) => const SignInScreen()), (_) => false);
+    Get.offAllNamed(SignInScreen.name, predicate: (_) => false);
   }
+
 }

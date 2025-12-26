@@ -1,10 +1,10 @@
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:task_manager/data/models/network_response.dart';
-import 'package:task_manager/data/services/network_caller.dart';
-import 'package:task_manager/data/utils/urls.dart';
-import 'package:task_manager/ui/controllers/auth_controller.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart' show Get;
+import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:task_manager/ui/controllers/sign_in_controller.dart';
 import 'package:task_manager/ui/screens/forgot_password_email_screen.dart';
 import 'package:task_manager/ui/screens/main_bottom_nav_bar_screen.dart';
 import 'package:task_manager/ui/screens/sign_up_screen.dart';
@@ -18,7 +18,7 @@ import 'no_internet_screen.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
-
+  static const String name = '/SigninScreen';
   @override
   State<SignInScreen> createState() => _SignInScreenState();
 }
@@ -27,7 +27,7 @@ class _SignInScreenState extends State<SignInScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailTEController = TextEditingController();
   final TextEditingController _passworkdTEController = TextEditingController();
-  bool _inProgess = false;
+  final SignInController _signInController = Get.find<SignInController>();
   @override
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme
@@ -50,13 +50,17 @@ class _SignInScreenState extends State<SignInScreen> {
                 const SizedBox(height: 24,),
                 _buildSignInForm(),
                 const SizedBox(height: 24,),
-                Visibility(
-                  visible: !_inProgess,
-                  replacement: CenterCircularProgressIndicator(),
-                  child: ElevatedButton(
-                      onPressed: _onTapNextButton,
-                      child: Icon(Icons.arrow_circle_right_outlined)
-                  ),
+                GetBuilder<SignInController>(
+                  builder:(signInController) {
+                    return Visibility(
+                      visible: !signInController.inProgress,
+                      replacement: CenterCircularProgressIndicator(),
+                      child: ElevatedButton(
+                          onPressed: _onTapNextButton,
+                          child: Icon(Icons.arrow_circle_right_outlined)
+                      ),
+                    );
+                  },
                 ),
                 const SizedBox(height: 24,),
                 _buildSignUpSection(),
@@ -151,7 +155,7 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   void _onTapForgotPasswordButton() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => const ForgotPasswordEmailScreen()));
+    Get.toNamed(ForgotPasswordEmailScreen.name);
   }
 
   void _onTapNextButton() {
@@ -166,43 +170,10 @@ class _SignInScreenState extends State<SignInScreen> {
 
   Future<void> _signIn() async
   {
-    _inProgess = true;
-    setState(() {
-
-    });
-    Map<String, dynamic> reqBody =
-        {
-          "email" : _emailTEController.text.trim(),
-          "password" : _passworkdTEController.text
-        };
-    final NetworkResponse response = await NetworkCaller.postRequest(
-        url: Urls.login,
-      body: reqBody
-    );
-    _inProgess = false;
-    setState(() {
-
-    });
-    if(response.isSuccess)
+    final bool result = await _signInController.signIn(_emailTEController.text.trim(), _passworkdTEController.text);
+    if(result)
       {
-        final data = response.responseData['data'];
-        final String base64Image = data['photo'];
-        final imagePath = await AuthController.saveProfileImage(
-            data['photo'],
-            'profile_image.png'
-        );
-        await AuthController.saveUserData(
-          token: response.responseData['token'],
-          email: data['email'],
-          firstName: data['firstName'],
-          lastName: data['lastName'],
-          phone: data['mobile'],
-          photo: 'profile_image.png'
-        );
-
-        Navigator.pushAndRemoveUntil(context,
-            MaterialPageRoute(builder: (context) => const MainBottomNavBarScreen())
-            , (_) => false);
+        Get.offAllNamed(MainBottomNavBarScreen.name, predicate: (_) => false);
       }
     else
       {
@@ -211,7 +182,7 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   void _onTapSignUp() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => const SignUpScreen()));
+    Get.toNamed(SignUpScreen.name);
   }
 
   @override

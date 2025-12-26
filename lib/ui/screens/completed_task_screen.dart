@@ -12,7 +12,7 @@ import 'no_internet_screen.dart';
 
 class CompletedTaskScreen extends StatefulWidget {
   const CompletedTaskScreen({super.key});
-
+  static const String name = '/CompletedTaskScreeen';
   @override
   State<CompletedTaskScreen> createState() => _CompletedTaskScreenState();
 }

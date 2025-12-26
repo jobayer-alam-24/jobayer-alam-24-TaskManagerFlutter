@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:task_manager/ui/screens/splash_screen.dart';
 
 class NoInternetScreen extends StatelessWidget {
   const NoInternetScreen({super.key});
-
+  static const String name = '/NoInternetScreen';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,10 +60,7 @@ class NoInternetScreen extends StatelessWidget {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => const SplashScreen()),
-                      );
+                      Get.off('/');
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.red,

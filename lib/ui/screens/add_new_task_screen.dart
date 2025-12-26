@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:task_manager/data/models/network_response.dart';
 import 'package:task_manager/data/services/network_caller.dart';
 import 'package:task_manager/ui/controllers/auth_controller.dart';
@@ -11,7 +13,7 @@ import 'no_internet_screen.dart';
 
 class AddNewTaskScreen extends StatefulWidget {
   const AddNewTaskScreen({super.key});
-
+  static const String name = '/AddNewTaskScreen';
   @override
   State<AddNewTaskScreen> createState() => _AddNewTaskScreenState();
 }
@@ -40,7 +42,8 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
             {
               return;
             }
-          Navigator.pop(context, _shouldRefershPreviousPage);
+
+          Get.back(result: _shouldRefershPreviousPage);
         },
         child: Scaffold(
           appBar: TMAppBar(userName: _userName, userEmail: _userEmail,),

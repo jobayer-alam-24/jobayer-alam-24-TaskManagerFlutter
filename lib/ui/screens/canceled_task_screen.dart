@@ -12,7 +12,7 @@ import 'no_internet_screen.dart';
 
 class CanceledTaskScreen extends StatefulWidget {
   const CanceledTaskScreen({super.key});
-
+  static const String name = '/CancelledTaskScreen';
   @override
   State<CanceledTaskScreen> createState() => _CanceledTaskScreenState();
 }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:task_manager/ui/screens/sign_in_screen.dart';
 import 'package:task_manager/ui/widgets/build_photo_picker.dart';
 import 'package:task_manager/ui/widgets/center_circular_progress_indicator.dart';
@@ -13,7 +15,7 @@ import 'no_internet_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
-
+  static const String name = '/ProfileScreen';
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
@@ -194,7 +196,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         _clearTextFields();
         await AuthController.ClearUserData();
         ShowSnackBarMessege(context, "Profile Updated Successfully!");
-        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const SignInScreen()), (_) => false);
+        Get.offAllNamed(SignInScreen.name, predicate: (_) => false);
       } else {
         ShowSnackBarMessege(context, "Something went wrong!", true);
       }

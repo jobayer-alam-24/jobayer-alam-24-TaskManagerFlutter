@@ -1,5 +1,7 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:task_manager/ui/screens/canceled_task_screen.dart';
 import 'package:task_manager/ui/screens/completed_task_screen.dart';
 import 'package:task_manager/ui/screens/new_task_screen.dart';
@@ -11,7 +13,7 @@ import '../widgets/tm_app_bar.dart';
 
 class MainBottomNavBarScreen extends StatefulWidget {
   const MainBottomNavBarScreen({super.key});
-
+  static const String name = '/MainBottomNavbarScreen';
   @override
   State<MainBottomNavBarScreen> createState() => _MainBottomNavBarScreenState();
 }
@@ -50,9 +52,11 @@ class _MainBottomNavBarScreenState extends State<MainBottomNavBarScreen> {
             backgroundColor: AppColors.themeColor,
             foregroundColor: Colors.white,
             onPressed: () async {
-              final bool? shouldRefresh = await Navigator.push(
+              final bool? shouldRefresh = await Navigator.push<bool>(
                 context,
-                MaterialPageRoute(builder: (_) => const AddNewTaskScreen()),
+                MaterialPageRoute(
+                  builder: (_) => const AddNewTaskScreen(),
+                ),
               );
               if (shouldRefresh == true) {
                 _newTaskKey.currentState?.refreshTaskList();
