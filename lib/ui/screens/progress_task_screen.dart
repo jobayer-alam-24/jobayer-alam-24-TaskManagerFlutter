@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/src/extension_instance.dart';
+import 'package:task_manager/ui/controllers/progress_task_controller.dart';
 
 import '../../data/models/network_response.dart';
 import '../../data/models/task_list_model.dart';
@@ -18,8 +22,7 @@ class ProgressTaskScreen extends StatefulWidget {
 }
 
 class _ProgressTaskScreenState extends State<ProgressTaskScreen> {
-  bool _getProgressedTaskListInProgress = false;
-  List<TaskModel> taskLists = [];
+  final ProgressTaskController _controller = Get.find<ProgressTaskController>();
   @override
   void initState() {
     _getProgressedTaskList();
@@ -28,44 +31,36 @@ class _ProgressTaskScreenState extends State<ProgressTaskScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Visibility(
-      visible: !_getProgressedTaskListInProgress,
-      replacement: const CenterCircularProgressIndicator(),
-      child: RefreshIndicator(
-        onRefresh: () async {
-          await _getProgressedTaskList();
-        },
-        child: ListView.separated(
-          padding: const EdgeInsets.only(top: 16),
-          itemCount: taskLists.length,
-          itemBuilder: (context, index) {
-            return TaskCard(taskModel: taskLists[index], onRefreshList: _getProgressedTaskList,);
+    return GetBuilder<ProgressTaskController>(builder: (controller){
+      return Visibility(
+        visible: !controller.inProgress,
+        replacement: const CenterCircularProgressIndicator(),
+        child: RefreshIndicator(
+          onRefresh: () async {
+            await _getProgressedTaskList();
           },
-          separatorBuilder: (context, index)
-          {
-            return const SizedBox(height: 8,);
-          },
+          child: ListView.separated(
+            padding: const EdgeInsets.only(top: 16),
+            itemCount: _controller.taskList.length,
+            itemBuilder: (context, index) {
+              return TaskCard(taskModel: controller.taskList[index], onRefreshList: _getProgressedTaskList,);
+            },
+            separatorBuilder: (context, index)
+            {
+              return const SizedBox(height: 8,);
+            },
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   Future<void> _getProgressedTaskList() async
   {
-    taskLists.clear();
-    _getProgressedTaskListInProgress = true;
-    setState(() {});
-    final NetworkResponse response = await NetworkCaller.getRequest(url: Urls.progressTaskLists);
-    if(response.isSuccess)
+    final result = await _controller.getProgressedTaskList();
+    if(!result)
     {
-      final TaskListModel taskListModel = TaskListModel.fromJson(response.responseData);
-      taskLists = taskListModel.data ?? [];
-    }
-    else {
       ShowSnackBarMessege(context, "Something went wrong!", true);
     }
-    _getProgressedTaskListInProgress = false;
-    setState(() {});
   }
-
 }

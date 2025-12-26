@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:task_manager/data/models/network_response.dart';
 import 'package:task_manager/data/services/network_caller.dart';
+import 'package:task_manager/ui/controllers/add_new_task_controller.dart';
 import 'package:task_manager/ui/controllers/auth_controller.dart';
 import 'package:task_manager/ui/widgets/center_circular_progress_indicator.dart';
 import 'package:task_manager/ui/widgets/show_snackbar.dart';
@@ -30,7 +33,7 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
   final TextEditingController _titleTEController = TextEditingController();
   final TextEditingController _descTEController = TextEditingController();
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
-  bool _inProgress = false;
+  final AddNewTaskController _addNewTaskController = Get.find<AddNewTaskController>();
   bool _shouldRefershPreviousPage = false;
 
   @override
@@ -91,10 +94,14 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
                       maxLines: 5,
                     ),
                     const SizedBox(height: 16,),
-                    Visibility(
-                        visible: !_inProgress,
-                        replacement: CenterCircularProgressIndicator(),
-                        child: ElevatedButton(onPressed: _onTapSubmitButton, child: Icon(Icons.arrow_circle_right_outlined)))
+                    GetBuilder<AddNewTaskController>(
+                      builder: (controller) {
+                        return Visibility(
+                            visible: !controller.inProgress,
+                            replacement: CenterCircularProgressIndicator(),
+                            child: ElevatedButton(onPressed: _onTapSubmitButton, child: Icon(Icons.arrow_circle_right_outlined)));
+                      }
+                    )
                   ],
                 ),
               ),
@@ -119,19 +126,8 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
 
   Future<void> _addNewTask() async
   {
-    _inProgress = true;
-    setState(() {});
-    Map<String, dynamic> reqBody = {
-        "title" : _titleTEController.text.trim(),
-        "description" : _descTEController.text.trim(),
-        "status" : "New"
-    };
-    final NetworkResponse response = await NetworkCaller.postRequest(url: Urls.addNewTask,
-      body: reqBody,
-    );
-    _inProgress = false;
-    setState(() {});
-    if(response.isSuccess)
+    final bool result = await _addNewTaskController.addNewTask(_titleTEController.text.trim(), _descTEController.text.trim());
+    if(result)
       {
         _shouldRefershPreviousPage = true;
         _clearTextFields();
