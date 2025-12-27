@@ -10,7 +10,6 @@ class ScreenBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Size ScreenSize = MediaQuery.sizeOf(context);
     return SizedBox.expand(
       child: Stack(
         fit: StackFit.expand,

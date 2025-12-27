@@ -6,8 +6,6 @@ import 'package:task_manager/ui/controllers/cancelled_task_controller.dart';
 import '../widgets/center_circular_progress_indicator.dart';
 import '../widgets/show_snackbar.dart';
 import '../widgets/task_card.dart';
-import 'no_internet_screen.dart';
-
 class CanceledTaskScreen extends StatefulWidget {
   const CanceledTaskScreen({super.key});
   static const String name = '/CancelledTaskScreen';

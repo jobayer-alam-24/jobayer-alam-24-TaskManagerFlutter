@@ -13,9 +13,6 @@ import 'package:task_manager/ui/widgets/screen_background.dart';
 import 'package:task_manager/ui/widgets/show_snackbar.dart';
 
 import '../widgets/center_circular_progress_indicator.dart';
-import '../widgets/show_snackbar.dart';
-import 'no_internet_screen.dart';
-
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
   static const String name = '/SigninScreen';

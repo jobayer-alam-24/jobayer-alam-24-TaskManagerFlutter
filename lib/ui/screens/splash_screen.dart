@@ -8,8 +8,6 @@ import 'package:task_manager/ui/screens/sign_in_screen.dart';
 import 'package:task_manager/ui/utils/assets_path.dart';
 
 import '../widgets/screen_background.dart';
-import 'no_internet_screen.dart';
-
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
   static const String name = '/';

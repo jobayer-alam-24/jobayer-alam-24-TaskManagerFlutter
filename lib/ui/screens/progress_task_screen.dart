@@ -3,16 +3,9 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:task_manager/ui/controllers/progress_task_controller.dart';
-
-import '../../data/models/network_response.dart';
-import '../../data/models/task_list_model.dart';
-import '../../data/models/task_model.dart';
-import '../../data/services/network_caller.dart';
-import '../../data/utils/urls.dart';
 import '../widgets/center_circular_progress_indicator.dart';
 import '../widgets/show_snackbar.dart';
 import '../widgets/task_card.dart';
-import 'no_internet_screen.dart';
 
 class ProgressTaskScreen extends StatefulWidget {
   const ProgressTaskScreen({super.key});

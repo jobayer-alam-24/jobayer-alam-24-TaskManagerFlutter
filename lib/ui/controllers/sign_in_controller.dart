@@ -3,8 +3,6 @@ import 'package:get/get.dart';
 import '../../data/models/network_response.dart';
 import '../../data/services/network_caller.dart';
 import '../../data/utils/urls.dart';
-import '../screens/main_bottom_nav_bar_screen.dart';
-import '../widgets/show_snackbar.dart';
 import 'auth_controller.dart';
 
 class SignInController extends GetxController {
@@ -30,11 +28,6 @@ class SignInController extends GetxController {
     if(response.isSuccess)
     {
       final data = response.responseData['data'];
-      final String base64Image = data['photo'];
-      final imagePath = await AuthController.saveProfileImage(
-          data['photo'],
-          'profile_image.png'
-      );
       await AuthController.saveUserData(
           token: response.responseData['token'],
           email: data['email'],

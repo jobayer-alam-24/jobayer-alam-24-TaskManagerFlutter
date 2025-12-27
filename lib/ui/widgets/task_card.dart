@@ -12,6 +12,7 @@ class TaskCard extends StatefulWidget {
     super.key, required this.taskModel, required this.onRefreshList,
   });
   final TaskModel taskModel;
+
   final VoidCallback onRefreshList;
   @override
   State<TaskCard> createState() => _TaskCardState();
@@ -19,8 +20,7 @@ class TaskCard extends StatefulWidget {
 
 class _TaskCardState extends State<TaskCard> {
   String _selectedStatus = '';
-  bool _changeStatusInProgress = false;
-  bool _deleteTaskStaus = false;
+  bool _changeTaskStatus = false, _deleteTaskStatus = false;
   @override
   void initState() {
     _selectedStatus = widget.taskModel.status!;
@@ -97,7 +97,7 @@ class _TaskCardState extends State<TaskCard> {
   }
 
   Future<void> _onTapDeleteButton() async {
-    _deleteTaskStaus = true;
+    _deleteTaskStatus = true;
     setState(() {});
     final NetworkResponse response = await NetworkCaller.getRequest(
         url: Urls.deleteTask(widget.taskModel.sId!)
@@ -106,7 +106,7 @@ class _TaskCardState extends State<TaskCard> {
     {
       widget.onRefreshList();
     }else {
-      _deleteTaskStaus = false;
+      _deleteTaskStatus = false;
       setState(() {});
       ShowSnackBarMessege(context, response.errorMessege, true);
     }
@@ -115,7 +115,7 @@ class _TaskCardState extends State<TaskCard> {
 
   Future<void> _changeStatus(String newStatus) async
   {
-    _changeStatusInProgress = true;
+    _changeTaskStatus = true;
     setState(() {});
     final NetworkResponse response = await NetworkCaller.getRequest(
         url: Urls.changeTaskStatus(widget.taskModel.sId!, newStatus)
@@ -124,7 +124,7 @@ class _TaskCardState extends State<TaskCard> {
       {
         widget.onRefreshList();
       }else {
-      _changeStatusInProgress = false;
+      _changeTaskStatus = false;
       setState(() {});
       ShowSnackBarMessege(context, response.errorMessege, true);
     }

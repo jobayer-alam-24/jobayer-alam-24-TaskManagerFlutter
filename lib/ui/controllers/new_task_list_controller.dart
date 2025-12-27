@@ -5,7 +5,6 @@ import '../../data/models/network_response.dart';
 import '../../data/models/task_list_model.dart';
 import '../../data/services/network_caller.dart';
 import '../../data/utils/urls.dart';
-import '../widgets/show_snackbar.dart';
 
 class NewTaskListController extends GetxController
 {

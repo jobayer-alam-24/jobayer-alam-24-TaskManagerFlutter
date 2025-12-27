@@ -23,6 +23,7 @@ dependencies:
   curved_navigation_bar: ^1.0.6
   connectivity_plus: ^7.0.0
   get: ^4.7.3
+  firebase_core: ^4.3.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

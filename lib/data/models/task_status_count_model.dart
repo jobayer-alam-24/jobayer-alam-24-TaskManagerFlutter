@@ -1,4 +1,3 @@
-import 'package:task_manager/data/models/task_model.dart';
 import 'package:task_manager/data/models/task_status_model.dart';
 
 class TaskStatusCountModel {
